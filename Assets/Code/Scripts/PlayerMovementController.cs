@@ -9,13 +9,8 @@ public class PlayerMovementController : MonoBehaviour
     [SerializeField] private float walkingSpeed = 6f;
     [SerializeField] private float rotationSpeed = 10f;
 
-    public float walkingSpeed = 6f;
-
-    public float rotationSpeed = 10f;
-
     private void Awake()
     {
-        playerManager = GetComponent<PlayerManager>();
         inputManager = GetComponent<PlayerInputManager>();  
         collisionController = GetComponent<PlayerCollisionController>();
     }
