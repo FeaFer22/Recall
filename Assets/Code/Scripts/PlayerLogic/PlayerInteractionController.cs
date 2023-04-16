@@ -9,7 +9,7 @@ public class PlayerInteractionController : MonoBehaviour
     private PlayerMovementController movementController;
     private PlayerCollisionController collisionController;
     private PlayerInputManager inputManager;
-    public ClearCounterController selectedClearCounter;
+    private ClearCounterController selectedClearCounter;
 
     [SerializeField] private LayerMask counterLayerMask;
 
