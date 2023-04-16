@@ -6,8 +6,10 @@ using UnityEngine.InputSystem;
 public class PlayerManager : MonoBehaviour
 {
     // Animator animator;
-    PlayerInputManager inputManager;
-    PlayerMovementController movementController;
+    private PlayerInputManager inputManager;
+    private PlayerMovementController movementController;
+    private PlayerInteractionController interactionController;
+
     // CameraManager cameraManager;
 
     // public bool isInteracting;
@@ -18,11 +20,13 @@ public class PlayerManager : MonoBehaviour
         inputManager = GetComponent<PlayerInputManager>();
         // cameraManager = FindObjectOfType<CameraManager>();
         movementController = GetComponent<PlayerMovementController>();
+        interactionController = GetComponent<PlayerInteractionController>();
     }
 
     private void Update()
     {
         inputManager.HandleAllInputs();
+        interactionController.HandleInteraction();
     }
 
     private void FixedUpdate()

@@ -129,22 +129,13 @@
             ]
         },
         {
-            "name": "PlayerActions",
+            "name": "PlayerInteraction",
             "id": "0865b020-5e73-4cde-a29c-aeba0d6dfd51",
             "actions": [
                 {
-                    "name": "Sprint",
+                    "name": "Interact",
                     "type": "Button",
                     "id": "d39db970-2958-45ab-9a6d-0473146530f3",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Quack",
-                    "type": "Button",
-                    "id": "ad0ef6c2-1128-4075-9cba-810fe1d8f2cd",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -154,45 +145,12 @@
             "bindings": [
                 {
                     "name": "",
-                    "id": "bbe34d78-f183-40c9-9643-d24e4ea886dd",
-                    "path": "<Keyboard>/shift",
+                    "id": "575e40ef-fc42-434c-baa9-0359d544dc72",
+                    "path": "<Keyboard>/e",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Sprint",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "021750ed-5579-4af0-be6e-94bcb289cb96",
-                    "path": "<Gamepad>/leftShoulder",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Sprint",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "c4663770-daf7-447f-b60f-c84f3921e726",
-                    "path": "<Keyboard>/q",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Quack",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "b450f08a-fce3-40af-b8f2-250a9e139073",
-                    "path": "<Gamepad>/buttonEast",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Quack",
+                    "action": "Interact",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -4,7 +4,8 @@ public class PlayerMovementController : MonoBehaviour
 {
     private PlayerInputManager inputManager;
     [SerializeField] private PlayerCollisionController collisionController;
-    private Vector3 moveDirection;
+    public Vector3 moveDirection;
+    public Vector3 lastInteractionDirection;
 
     [SerializeField] private float walkingSpeed = 6f;
     [SerializeField] private float rotationSpeed = 10f;
@@ -14,23 +15,24 @@ public class PlayerMovementController : MonoBehaviour
         inputManager = GetComponent<PlayerInputManager>();  
         collisionController = GetComponent<PlayerCollisionController>();
     }
-
     public void HandleAllMovement()
     {
         HandleMovement();
         HandleRotation();
     }
 
-    private void HandleMovement()
+    private Vector3 HandleMovement()
     {
         moveDirection = new Vector3(inputManager.horizontalInput, 0, inputManager.verticalInput);
-        //moveDirection = Quaternion.Euler(0,45,0) * moveDirection;
-        moveDirection.Normalize();
-        moveDirection.y = 0;
 
         float moveDistance = walkingSpeed * Time.deltaTime;
 
         bool canMove = collisionController.HandleCollision(moveDirection, moveDistance);
+
+        if (moveDirection != Vector3.zero)
+        {
+            lastInteractionDirection = moveDirection;
+        }
 
         if (!canMove)
         {
@@ -61,6 +63,7 @@ public class PlayerMovementController : MonoBehaviour
         {
             transform.position += moveDirection * moveDistance;
         }
+        return moveDirection;
     }
 
     private void HandleRotation()

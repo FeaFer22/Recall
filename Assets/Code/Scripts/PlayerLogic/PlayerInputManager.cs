@@ -1,21 +1,16 @@
+using System;
 using UnityEngine;
 
 public class PlayerInputManager : MonoBehaviour
 {
-    PlayerInput playerInput;
-    PlayerMovementController movementController;
+    private PlayerInput playerInput;
 
 
     public Vector2 movementInput;
     public float verticalInput;
     public float horizontalInput;
 
-    public bool sprint_input;
-
-    private void Awake()
-    {
-        movementController = GetComponent<PlayerMovementController>();
-    }
+    public event EventHandler OnInteractAction;
 
     private void OnEnable()
     {
@@ -25,8 +20,7 @@ public class PlayerInputManager : MonoBehaviour
 
             playerInput.PlayerMovement.Movement.performed += i => movementInput = i.ReadValue<Vector2>();
 
-            playerInput.PlayerActions.Sprint.performed += i => sprint_input = true;
-            playerInput.PlayerActions.Sprint.canceled += i => sprint_input = false;
+            playerInput.PlayerInteraction.Interact.performed += Interact_performed;
         }
 
         playerInput.Enable();
@@ -36,6 +30,12 @@ public class PlayerInputManager : MonoBehaviour
     {
         playerInput.Disable();
     }
+
+    private void Interact_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+    {
+        OnInteractAction?.Invoke(this, EventArgs.Empty);
+    }
+
 
     public void HandleAllInputs()
     {
