@@ -9,8 +9,13 @@ public class PlayerMovementController : MonoBehaviour
     [SerializeField] private float walkingSpeed = 6f;
     [SerializeField] private float rotationSpeed = 10f;
 
+    public float walkingSpeed = 6f;
+
+    public float rotationSpeed = 10f;
+
     private void Awake()
     {
+        playerManager = GetComponent<PlayerManager>();
         inputManager = GetComponent<PlayerInputManager>();  
         collisionController = GetComponent<PlayerCollisionController>();
     }
@@ -24,6 +29,9 @@ public class PlayerMovementController : MonoBehaviour
     private void HandleMovement()
     {
         moveDirection = new Vector3(inputManager.horizontalInput, 0, inputManager.verticalInput);
+        //moveDirection = Quaternion.Euler(0,45,0) * moveDirection;
+        moveDirection.Normalize();
+        moveDirection.y = 0;
 
         float moveDistance = walkingSpeed * Time.deltaTime;
 
