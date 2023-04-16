@@ -1,18 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class PlayerCollisionController : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField] private float playerRadius = .55f;
+    [SerializeField] private float playerHeight = 2f;
 
-    // Update is called once per frame
-    void Update()
+    public bool HandleCollision(Vector3 moveDir, float moveDistance)
     {
-        
+        return !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, moveDir, moveDistance);
     }
 }

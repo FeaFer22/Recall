@@ -2,11 +2,12 @@ using UnityEngine;
 
 public class PlayerMovementController : MonoBehaviour
 {
-    PlayerManager playerManager;
-    PlayerInputManager inputManager;
-    Vector3 moveDirection;
+    private PlayerInputManager inputManager;
+    [SerializeField] private PlayerCollisionController collisionController;
+    private Vector3 moveDirection;
 
-    private Rigidbody _rigidbody;
+    [SerializeField] private float walkingSpeed = 6f;
+    [SerializeField] private float rotationSpeed = 10f;
 
     public float walkingSpeed = 6f;
 
@@ -16,7 +17,7 @@ public class PlayerMovementController : MonoBehaviour
     {
         playerManager = GetComponent<PlayerManager>();
         inputManager = GetComponent<PlayerInputManager>();  
-        _rigidbody = GetComponent<Rigidbody>();
+        collisionController = GetComponent<PlayerCollisionController>();
     }
 
     public void HandleAllMovement()
@@ -32,18 +33,46 @@ public class PlayerMovementController : MonoBehaviour
         moveDirection.Normalize();
         moveDirection.y = 0;
 
-        moveDirection = moveDirection * walkingSpeed;
+        float moveDistance = walkingSpeed * Time.deltaTime;
 
-        Vector3 movementVelocity = moveDirection;
-        _rigidbody.velocity = movementVelocity;
+        bool canMove = collisionController.HandleCollision(moveDirection, moveDistance);
+
+        if (!canMove)
+        {
+            Vector3 moveDirX = new Vector3(moveDirection.x, 0, 0).normalized;
+            canMove = collisionController.HandleCollision(moveDirX, moveDistance);
+
+            if (canMove)
+            {
+                moveDirection = moveDirX;
+            }
+            else
+            {
+                Vector3 moveDirZ = new Vector3(0, 0, moveDirection.z).normalized;
+                canMove = collisionController.HandleCollision(moveDirZ, moveDistance);
+
+                if (canMove)
+                {
+                    moveDirection = moveDirZ;
+                }
+                else
+                {
+                    moveDirection = Vector3.zero;
+                }
+            }
+        }
+        
+        if (canMove)
+        {
+            transform.position += moveDirection * moveDistance;
+        }
     }
 
     private void HandleRotation()
     {
         if(moveDirection != Vector3.zero)
         {
-            Quaternion targetRotation = Quaternion.LookRotation(moveDirection, Vector3.up);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);   
+            transform.forward = Vector3.Slerp(transform.forward, moveDirection, Time.deltaTime * rotationSpeed);   
         }
     }
 }
