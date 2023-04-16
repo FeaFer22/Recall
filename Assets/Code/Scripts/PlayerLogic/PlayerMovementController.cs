@@ -21,7 +21,7 @@ public class PlayerMovementController : MonoBehaviour
         HandleRotation();
     }
 
-    private Vector3 HandleMovement()
+    private void HandleMovement()
     {
         moveDirection = new Vector3(inputManager.horizontalInput, 0, inputManager.verticalInput);
 
@@ -63,7 +63,6 @@ public class PlayerMovementController : MonoBehaviour
         {
             transform.position += moveDirection * moveDistance;
         }
-        return moveDirection;
     }
 
     private void HandleRotation()
