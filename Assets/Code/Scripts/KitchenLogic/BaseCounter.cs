@@ -12,6 +12,10 @@ public class BaseCounter : MonoBehaviour, IKitchenObjectParent
     {
         Debug.Log("Base counter interact();");
     }
+    public virtual void InteractAlternate(PlayerInteractionController interactionController)
+    {
+        Debug.Log("Base counter interactALT();");
+    }
 
     public Transform GetKitchenObjectFollowTransform()
     {

@@ -11,6 +11,7 @@ public class PlayerInputManager : MonoBehaviour
     public float horizontalInput;
 
     public event EventHandler OnInteractAction;
+    public event EventHandler OnInteractAltAction;
 
     private void OnEnable()
     {
@@ -21,9 +22,15 @@ public class PlayerInputManager : MonoBehaviour
             playerInput.PlayerMovement.Movement.performed += i => movementInput = i.ReadValue<Vector2>();
 
             playerInput.PlayerInteraction.Interact.performed += Interact_performed;
+            playerInput.PlayerInteraction.InteractAlt.performed += InteractAlt_performed;
         }
 
         playerInput.Enable();
+    }
+
+    private void InteractAlt_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+    {
+        OnInteractAltAction?.Invoke(this, EventArgs.Empty);
     }
 
     private void OnDisable()

@@ -162,6 +162,15 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""InteractAlt"",
+                    ""type"": ""Button"",
+                    ""id"": ""c9f55bf8-5967-42a7-9fb9-4766b4982c45"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -173,6 +182,17 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Interact"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""688d50de-df83-429f-85d7-27da18e94d9e"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""InteractAlt"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -187,6 +207,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         // PlayerInteraction
         m_PlayerInteraction = asset.FindActionMap("PlayerInteraction", throwIfNotFound: true);
         m_PlayerInteraction_Interact = m_PlayerInteraction.FindAction("Interact", throwIfNotFound: true);
+        m_PlayerInteraction_InteractAlt = m_PlayerInteraction.FindAction("InteractAlt", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -280,11 +301,13 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
     private readonly InputActionMap m_PlayerInteraction;
     private IPlayerInteractionActions m_PlayerInteractionActionsCallbackInterface;
     private readonly InputAction m_PlayerInteraction_Interact;
+    private readonly InputAction m_PlayerInteraction_InteractAlt;
     public struct PlayerInteractionActions
     {
         private @PlayerInput m_Wrapper;
         public PlayerInteractionActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
         public InputAction @Interact => m_Wrapper.m_PlayerInteraction_Interact;
+        public InputAction @InteractAlt => m_Wrapper.m_PlayerInteraction_InteractAlt;
         public InputActionMap Get() { return m_Wrapper.m_PlayerInteraction; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -297,6 +320,9 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 @Interact.started -= m_Wrapper.m_PlayerInteractionActionsCallbackInterface.OnInteract;
                 @Interact.performed -= m_Wrapper.m_PlayerInteractionActionsCallbackInterface.OnInteract;
                 @Interact.canceled -= m_Wrapper.m_PlayerInteractionActionsCallbackInterface.OnInteract;
+                @InteractAlt.started -= m_Wrapper.m_PlayerInteractionActionsCallbackInterface.OnInteractAlt;
+                @InteractAlt.performed -= m_Wrapper.m_PlayerInteractionActionsCallbackInterface.OnInteractAlt;
+                @InteractAlt.canceled -= m_Wrapper.m_PlayerInteractionActionsCallbackInterface.OnInteractAlt;
             }
             m_Wrapper.m_PlayerInteractionActionsCallbackInterface = instance;
             if (instance != null)
@@ -304,6 +330,9 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 @Interact.started += instance.OnInteract;
                 @Interact.performed += instance.OnInteract;
                 @Interact.canceled += instance.OnInteract;
+                @InteractAlt.started += instance.OnInteractAlt;
+                @InteractAlt.performed += instance.OnInteractAlt;
+                @InteractAlt.canceled += instance.OnInteractAlt;
             }
         }
     }
@@ -315,5 +344,6 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
     public interface IPlayerInteractionActions
     {
         void OnInteract(InputAction.CallbackContext context);
+        void OnInteractAlt(InputAction.CallbackContext context);
     }
 }

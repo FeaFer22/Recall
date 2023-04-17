@@ -7,7 +7,7 @@ public class PlayerMovementController : MonoBehaviour
     public Vector3 moveDirection;
     public Vector3 lastInteractionDirection;
 
-    [SerializeField] private float walkingSpeed = 6f;
+    [SerializeField] private float walkingSpeed = 8f;
     [SerializeField] private float rotationSpeed = 15f;
 
     private void Awake()

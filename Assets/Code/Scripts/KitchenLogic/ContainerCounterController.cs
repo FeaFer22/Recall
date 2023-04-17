@@ -10,8 +10,7 @@ public class ContainerCounterController : BaseCounter
     {
         if (!interactionController.HasKitchenObject())
         {
-            Transform kitchenObjectTransform = Instantiate(kitchenObjectSO.prefab);
-            kitchenObjectTransform.GetComponent<KitchenObject>().SetKitchenObjectParent(interactionController);
+            KitchenObject.SpawnKitchenObject(kitchenObjectSO, interactionController);
         }
     }
 }

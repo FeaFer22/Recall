@@ -42,6 +42,7 @@ public class PlayerInteractionController : MonoBehaviour, IKitchenObjectParent
     private void Start()
     {
         inputManager.OnInteractAction += inputManager_OnInteractionAction;
+        inputManager.OnInteractAltAction += inputManager_OnInteractionAltAction;
     }
 
     private void inputManager_OnInteractionAction(object sender, System.EventArgs e)
@@ -51,6 +52,15 @@ public class PlayerInteractionController : MonoBehaviour, IKitchenObjectParent
             selectedCounter.Interact(this);
         }
     }
+
+    private void inputManager_OnInteractionAltAction(object sender, System.EventArgs e)
+    {
+        if (selectedCounter != null)
+        {
+            selectedCounter.InteractAlternate(this);
+        }
+    }
+
 
     public void HandleInteraction()
     {
