@@ -1,17 +1,53 @@
+using Mono.CompilerServices.SymbolWriter;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ClearCounterController : MonoBehaviour
+public class ClearCounterController : MonoBehaviour, IKitchenObjectParent
 {
     [SerializeField] private KitchenObjectScriptableObject kitchenObjectSO;
     [SerializeField] private Transform counterTopPoint;
-    public void Interact()
-    {
-        Debug.Log("Interacted!");
-        Transform kitchenObjectTransform = Instantiate(kitchenObjectSO.prefab, counterTopPoint);
-        kitchenObjectTransform.localPosition = Vector3.zero;
 
-        Debug.Log(kitchenObjectTransform.GetComponent<KitchenObject>().GetKitchenObject().objectName);
+
+
+    private KitchenObject kitchenObject;
+
+    public void Interact(PlayerInteractionController interactionController)
+    {
+        if(kitchenObject == null)
+        {
+            Transform kitchenObjectTransform = Instantiate(kitchenObjectSO.prefab, counterTopPoint);
+            kitchenObjectTransform.GetComponent<KitchenObject>().SetKitchenObjectParent(this);
+        }
+        else
+        {
+            kitchenObject.SetKitchenObjectParent(interactionController);
+        }
     }
+
+    public Transform GetKitchenObjectFollowTransform()
+    {
+        return counterTopPoint;
+    }
+
+    public void SetKitchenObject(KitchenObject kitchenObject)
+    {
+        this.kitchenObject = kitchenObject;
+    }
+
+    public KitchenObject GetKitchenObject()
+    {
+        return kitchenObject;
+    }
+
+    public void ClearKitchenObject()
+    {
+        kitchenObject = null;
+    }
+
+    public bool HasKitchenObject()
+    {
+        return kitchenObject != null;
+    }
+
 }

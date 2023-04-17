@@ -4,14 +4,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class PlayerInteractionController : MonoBehaviour
+public class PlayerInteractionController : MonoBehaviour, IKitchenObjectParent
 {
     private PlayerMovementController movementController;
     private PlayerCollisionController collisionController;
     private PlayerInputManager inputManager;
     private ClearCounterController selectedClearCounter;
+    private KitchenObject kitchenObject;
 
     [SerializeField] private LayerMask counterLayerMask;
+
+    [SerializeField] private Transform kitchenObjectHoldPoint;
+
+  
 
     public static PlayerInteractionController Instance { get; private set; }
 
@@ -43,7 +48,7 @@ public class PlayerInteractionController : MonoBehaviour
     {
         if (selectedClearCounter != null)
         {
-            selectedClearCounter.Interact();
+            selectedClearCounter.Interact(this);
         }
     }
 
@@ -73,5 +78,30 @@ public class PlayerInteractionController : MonoBehaviour
     {
         this.selectedClearCounter = selectedCounter;
         OnSelectedCounterChanged?.Invoke(this, new OnSelectedCounterChangedEventArgs { selectedCounter = selectedClearCounter });
+    }
+
+    public Transform GetKitchenObjectFollowTransform()
+    {
+        return kitchenObjectHoldPoint;
+    }
+
+    public void SetKitchenObject(KitchenObject kitchenObject)
+    {
+        this.kitchenObject = kitchenObject;
+    }
+
+    public KitchenObject GetKitchenObject()
+    {
+        return kitchenObject;
+    }
+
+    public void ClearKitchenObject()
+    {
+        kitchenObject = null;
+    }
+
+    public bool HasKitchenObject()
+    {
+        return kitchenObject != null;
     }
 }
