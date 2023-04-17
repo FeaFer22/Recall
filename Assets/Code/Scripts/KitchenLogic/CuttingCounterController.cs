@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,8 +6,16 @@ using UnityEngine.Rendering;
 
 public class CuttingCounterController : BaseCounter
 {
+    public event EventHandler<OnProgressChangedEventArgs> OnProgressChanged;
+    public class OnProgressChangedEventArgs : EventArgs
+    {
+        public float progressNormalized;
+    }
+
 
     [SerializeField] private CuttingRecipeScriptableObj[] cutRecipeSriptableObjArray;
+
+    private int cuttingProgress;
 
     public override void Interact(PlayerInteractionController interactionController)
     {
@@ -17,6 +26,14 @@ public class CuttingCounterController : BaseCounter
                 if(HasRecipeWithInput(interactionController.GetKitchenObject().GetKitchenObject()))
                 {
                     interactionController.GetKitchenObject().SetKitchenObjectParent(this);
+                    cuttingProgress = 0;
+
+                    CuttingRecipeScriptableObj cuttingRecipeScriptableObj = GetCuttingRecipeScriptableObjWithInput(GetKitchenObject().GetKitchenObject());
+
+                    OnProgressChanged?.Invoke(this, new OnProgressChangedEventArgs
+                    {
+                        progressNormalized = (float)cuttingProgress / cuttingRecipeScriptableObj.cuttingProgressMax
+                    });
                 }
             }
             else
@@ -41,33 +58,51 @@ public class CuttingCounterController : BaseCounter
     {
         if (HasKitchenObject() && HasRecipeWithInput(GetKitchenObject().GetKitchenObject()))
         {
-            KitchenObjectScriptableObject outputKitchenObjectSO = GetOutputForInput(GetKitchenObject().GetKitchenObject());
-            GetKitchenObject().DestroySelf();
+            cuttingProgress++;
+            CuttingRecipeScriptableObj cuttingRecipeScriptableObj = GetCuttingRecipeScriptableObjWithInput(GetKitchenObject().GetKitchenObject());
+            
+            OnProgressChanged?.Invoke(this, new OnProgressChangedEventArgs
+            {
+                progressNormalized = (float)cuttingProgress / cuttingRecipeScriptableObj.cuttingProgressMax
+            });
 
-            KitchenObject.SpawnKitchenObject(outputKitchenObjectSO, this);
+            if (cuttingProgress >= cuttingRecipeScriptableObj.cuttingProgressMax)
+            {
+                KitchenObjectScriptableObject outputKitchenObjectSO = GetOutputForInput(GetKitchenObject().GetKitchenObject());
+                GetKitchenObject().DestroySelf();
+
+                KitchenObject.SpawnKitchenObject(outputKitchenObjectSO, this);
+            }
         }
     }
 
 
     private bool HasRecipeWithInput(KitchenObjectScriptableObject inputKitchenObjSO)
     {
-        foreach (CuttingRecipeScriptableObj cuttingRecipeScriptableObj in cutRecipeSriptableObjArray)
-        {
-            if(cuttingRecipeScriptableObj.input == inputKitchenObjSO)
-            {
-                return true;
-            }
-        }
-        return false;
+        CuttingRecipeScriptableObj cuttingRecipeScriptableObj = GetCuttingRecipeScriptableObjWithInput(inputKitchenObjSO);
+        return cuttingRecipeScriptableObj != null;
     }
 
     private KitchenObjectScriptableObject GetOutputForInput(KitchenObjectScriptableObject inputKitchenObjSO)
     {
+        CuttingRecipeScriptableObj cuttingRecipeScriptableObj = GetCuttingRecipeScriptableObjWithInput(inputKitchenObjSO);
+        if (cuttingRecipeScriptableObj != null)
+        {
+            return cuttingRecipeScriptableObj.output;
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    private CuttingRecipeScriptableObj GetCuttingRecipeScriptableObjWithInput(KitchenObjectScriptableObject inputKitchenObjSO)
+    {
         foreach (CuttingRecipeScriptableObj recipeScriptableObj in cutRecipeSriptableObjArray)
         {
-            if(recipeScriptableObj.input == inputKitchenObjSO)
+            if (recipeScriptableObj.input == inputKitchenObjSO)
             {
-                return recipeScriptableObj.output;
+                return recipeScriptableObj;
             }
         }
         return null;
