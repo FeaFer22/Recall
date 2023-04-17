@@ -8,7 +8,7 @@ public class PlayerMovementController : MonoBehaviour
     public Vector3 lastInteractionDirection;
 
     [SerializeField] private float walkingSpeed = 6f;
-    [SerializeField] private float rotationSpeed = 10f;
+    [SerializeField] private float rotationSpeed = 15f;
 
     private void Awake()
     {
@@ -37,7 +37,7 @@ public class PlayerMovementController : MonoBehaviour
         if (!canMove)
         {
             Vector3 moveDirX = new Vector3(moveDirection.x, 0, 0).normalized;
-            canMove = collisionController.HandleCollision(moveDirX, moveDistance);
+            canMove = moveDirection.x != 0 && collisionController.HandleCollision(moveDirX, moveDistance);
 
             if (canMove)
             {
@@ -46,7 +46,7 @@ public class PlayerMovementController : MonoBehaviour
             else
             {
                 Vector3 moveDirZ = new Vector3(0, 0, moveDirection.z).normalized;
-                canMove = collisionController.HandleCollision(moveDirZ, moveDistance);
+                canMove = moveDirection.z != 0 && collisionController.HandleCollision(moveDirZ, moveDistance);
 
                 if (canMove)
                 {
@@ -54,7 +54,7 @@ public class PlayerMovementController : MonoBehaviour
                 }
                 else
                 {
-                    moveDirection = Vector3.zero;
+
                 }
             }
         }

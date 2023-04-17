@@ -9,7 +9,7 @@ public class PlayerInteractionController : MonoBehaviour, IKitchenObjectParent
     private PlayerMovementController movementController;
     private PlayerCollisionController collisionController;
     private PlayerInputManager inputManager;
-    private ClearCounterController selectedClearCounter;
+    private BaseCounter selectedCounter;
     private KitchenObject kitchenObject;
 
     [SerializeField] private LayerMask counterLayerMask;
@@ -23,7 +23,7 @@ public class PlayerInteractionController : MonoBehaviour, IKitchenObjectParent
     public event EventHandler<OnSelectedCounterChangedEventArgs> OnSelectedCounterChanged;
     public class OnSelectedCounterChangedEventArgs : EventArgs
     {
-        public ClearCounterController selectedCounter;
+        public BaseCounter selectedCounter;
     }
 
 
@@ -46,9 +46,9 @@ public class PlayerInteractionController : MonoBehaviour, IKitchenObjectParent
 
     private void inputManager_OnInteractionAction(object sender, System.EventArgs e)
     {
-        if (selectedClearCounter != null)
+        if (selectedCounter != null)
         {
-            selectedClearCounter.Interact(this);
+            selectedCounter.Interact(this);
         }
     }
 
@@ -56,11 +56,11 @@ public class PlayerInteractionController : MonoBehaviour, IKitchenObjectParent
     {
         if (collisionController.HandleInteractionCollision(movementController.moveDirection, counterLayerMask, movementController.lastInteractionDirection))
         {
-            if (collisionController.raycastHit.transform.TryGetComponent(out ClearCounterController clearCounter))
+            if (collisionController.raycastHit.transform.TryGetComponent(out BaseCounter baseCounter))
             {
-                if (clearCounter != selectedClearCounter)
+                if (baseCounter != selectedCounter)
                 {
-                    SetSelectedCounter(clearCounter);
+                    SetSelectedCounter(baseCounter);
                 }
             }
             else
@@ -74,10 +74,10 @@ public class PlayerInteractionController : MonoBehaviour, IKitchenObjectParent
         }
     }
 
-    private void SetSelectedCounter(ClearCounterController selectedCounter)
+    private void SetSelectedCounter(BaseCounter selectedCounter)
     {
-        this.selectedClearCounter = selectedCounter;
-        OnSelectedCounterChanged?.Invoke(this, new OnSelectedCounterChangedEventArgs { selectedCounter = selectedClearCounter });
+        this.selectedCounter = selectedCounter;
+        OnSelectedCounterChanged?.Invoke(this, new OnSelectedCounterChangedEventArgs { selectedCounter = selectedCounter });
     }
 
     public Transform GetKitchenObjectFollowTransform()

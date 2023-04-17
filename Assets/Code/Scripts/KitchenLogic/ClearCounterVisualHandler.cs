@@ -5,8 +5,8 @@ using UnityEngine.VFX;
 
 public class ClearCounterVisualHandler : MonoBehaviour
 {
-    [SerializeField] private ClearCounterController clearCounter;
-    [SerializeField] private GameObject visualGameObject;
+    [SerializeField] private BaseCounter baseCounter;
+    [SerializeField] private GameObject[] visualGameObjectArray;
     private void Start()
     {
         PlayerInteractionController.Instance.OnSelectedCounterChanged += Player_OnSelectedCounterChanged;
@@ -14,7 +14,7 @@ public class ClearCounterVisualHandler : MonoBehaviour
 
     private void Player_OnSelectedCounterChanged(object sender, PlayerInteractionController.OnSelectedCounterChangedEventArgs e)
     {
-        if (e.selectedCounter == clearCounter)
+        if (e.selectedCounter == baseCounter)
         {
             Show();
         }
@@ -26,11 +26,17 @@ public class ClearCounterVisualHandler : MonoBehaviour
 
     private void Show()
     {
-        visualGameObject.SetActive(true);
+        foreach (GameObject visualGameObject in visualGameObjectArray)
+        {
+            visualGameObject.SetActive(true);
+        }
     }
     private void Hide()
     {
-        visualGameObject.SetActive(false);
+        foreach (GameObject visualGameObject in visualGameObjectArray)
+        {
+            visualGameObject.SetActive(false);
+        }
     }
 
 }

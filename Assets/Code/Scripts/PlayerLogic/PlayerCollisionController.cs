@@ -5,7 +5,7 @@ using UnityEngine.Rendering;
 
 public class PlayerCollisionController : MonoBehaviour
 {
-    [SerializeField] private float playerRadius = .55f;
+    [SerializeField] private float playerRadius = .7f;
     [SerializeField] private float playerHeight = 2f;
     [SerializeField] private float interactDistance = 2f;
     public RaycastHit raycastHit;
