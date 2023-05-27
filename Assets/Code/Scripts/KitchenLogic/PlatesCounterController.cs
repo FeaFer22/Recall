@@ -11,11 +11,11 @@ public class PlatesCounterController : BaseCounter
     public event EventHandler onPlateRemoved;
 
 
-    [SerializeField] private KitchenObjectScriptableObject plateKitchenObject;
+    [SerializeField] private KitchenObjectScriptableObject plateKitchenObjectSO;
     private float spawnPlateTimer;
-    private float spawnPlateTimerMax = 4f;
+    [SerializeField] private float spawnPlateTimerMax = 4f;
     private int platesSpawnedAmount;
-    private int platesSpawnedAmountMax = 4;
+    [SerializeField] private int platesSpawnedAmountMax = 4;
 
     private void Update()
     {
@@ -41,7 +41,7 @@ public class PlatesCounterController : BaseCounter
             {
                 platesSpawnedAmount--;
 
-                KitchenObject.SpawnKitchenObject(plateKitchenObject, playerInteraction);
+                KitchenObject.SpawnKitchenObject(plateKitchenObjectSO, playerInteraction);
 
                 onPlateRemoved?.Invoke(this, EventArgs.Empty);
             }

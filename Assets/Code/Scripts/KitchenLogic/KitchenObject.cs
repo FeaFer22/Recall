@@ -8,7 +8,7 @@ public class KitchenObject : MonoBehaviour
 
     private IKitchenObjectParent kitchenObjectParent;
 
-    public KitchenObjectScriptableObject GetKitchenObject()
+    public KitchenObjectScriptableObject GetKitchenObjectSO()
     {
         return scriptableObject;
     }
@@ -39,6 +39,20 @@ public class KitchenObject : MonoBehaviour
     {
         kitchenObjectParent.ClearKitchenObject();
         Destroy(gameObject);
+    }
+
+    public bool TryGetPlate(out PlateKitchenObject plateKitchenObject)
+    {
+        if(this is PlateKitchenObject)
+        {
+            plateKitchenObject = this as PlateKitchenObject;
+            return true;
+        }
+        else
+        {
+            plateKitchenObject = null;
+            return false;
+        }
     }
 
     public static KitchenObject SpawnKitchenObject(KitchenObjectScriptableObject scriptableObject, IKitchenObjectParent kitchenObjectParent)

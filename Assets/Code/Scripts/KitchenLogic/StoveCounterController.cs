@@ -57,7 +57,7 @@ public class StoveCounterController : BaseCounter, IHasProgress
 
                         state = State.Fried;
                         burningTimer = 0f;
-                        burningRecipeScriptableObj = GetBurningRecipeScriptableObjWithInput(GetKitchenObject().GetKitchenObject());
+                        burningRecipeScriptableObj = GetBurningRecipeScriptableObjWithInput(GetKitchenObject().GetKitchenObjectSO());
                     }
                     break;
                 case State.Fried:
@@ -93,11 +93,11 @@ public class StoveCounterController : BaseCounter, IHasProgress
         {
             if (playerInteraction.HasKitchenObject())
             {
-                if (HasRecipeWithInput(playerInteraction.GetKitchenObject().GetKitchenObject()))
+                if (HasRecipeWithInput(playerInteraction.GetKitchenObject().GetKitchenObjectSO()))
                 {
                     playerInteraction.GetKitchenObject().SetKitchenObjectParent(this);
 
-                    fryingRecipeScriptableObj = GetFryingRecipeScriptableObjWithInput(GetKitchenObject().GetKitchenObject());
+                    fryingRecipeScriptableObj = GetFryingRecipeScriptableObjWithInput(GetKitchenObject().GetKitchenObjectSO());
 
                     state = State.Frying;
                     fryingTimer = 0f;
@@ -117,7 +117,20 @@ public class StoveCounterController : BaseCounter, IHasProgress
         {
             if (playerInteraction.HasKitchenObject())
             {
+                if (playerInteraction.GetKitchenObject().TryGetPlate(out PlateKitchenObject plateKitchenObject))
+                {
+                    if (plateKitchenObject.TryAddIngredient(GetKitchenObject().GetKitchenObjectSO()))
+                    {
+                        GetKitchenObject().DestroySelf();
 
+                        state = State.Idle;
+
+                        OnProgressChanged?.Invoke(this, new IHasProgress.OnProgressChangedEventArgs
+                        {
+                            progressNormalized = 0f
+                        });
+                    }
+                }
             }
             else
             {
