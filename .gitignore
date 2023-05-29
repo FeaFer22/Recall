@@ -10,6 +10,7 @@
 /[Ll]ogs/
 /[Mm]emoryCaptures/
 /[Aa]ssets/[Tt]hirdparty/
+/[Aa]ssets/[Tt]extMesh Pro/
 /[Aa]ssets/[Aa]rt/
 
 # Asset meta data should only be ignored when the corresponding asset is also ignored

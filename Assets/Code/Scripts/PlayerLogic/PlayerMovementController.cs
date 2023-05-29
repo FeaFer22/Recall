@@ -37,7 +37,7 @@ public class PlayerMovementController : MonoBehaviour
         if (!canMove)
         {
             Vector3 moveDirX = new Vector3(moveDirection.x, 0, 0).normalized;
-            canMove = moveDirection.x != 0 && collisionController.HandleCollision(moveDirX, moveDistance);
+            canMove = (moveDirection.x < -.5f || moveDirection.x > +.5f) && collisionController.HandleCollision(moveDirX, moveDistance);
 
             if (canMove)
             {
@@ -46,7 +46,7 @@ public class PlayerMovementController : MonoBehaviour
             else
             {
                 Vector3 moveDirZ = new Vector3(0, 0, moveDirection.z).normalized;
-                canMove = moveDirection.z != 0 && collisionController.HandleCollision(moveDirZ, moveDistance);
+                canMove = (moveDirection.z < -.5f || moveDirection.z > +.5f) && collisionController.HandleCollision(moveDirZ, moveDistance);
 
                 if (canMove)
                 {
