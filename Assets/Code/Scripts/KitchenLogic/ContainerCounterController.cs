@@ -1,9 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class ContainerCounterController : BaseCounter
 {
+    public event EventHandler OnPlayerGetObject;
     [SerializeField] private KitchenObjectScriptableObject kitchenObjectSO;
 
     public override void Interact(PlayerInteractionController interactionController)
@@ -11,6 +11,7 @@ public class ContainerCounterController : BaseCounter
         if (!interactionController.HasKitchenObject())
         {
             KitchenObject.SpawnKitchenObject(kitchenObjectSO, interactionController);
+            OnPlayerGetObject?.Invoke(this, EventArgs.Empty);
         }
     }
 }

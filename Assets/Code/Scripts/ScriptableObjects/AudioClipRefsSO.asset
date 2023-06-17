@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea73ce37c260a1b4b8bdfd2796faa350, type: 3}
+  m_Name: AudioClipRefsSO
+  m_EditorClassIdentifier: 
+  objectPickup: []
+  objectPlace: []
+  footSteps: []
+  cuttingBoardChop:
+  - {fileID: 8300000, guid: e74452f391739af4f972f1c240a07b20, type: 3}
+  panSizzle: {fileID: 8300000, guid: f1fdd9cd743d7e247a43b51a405e7eda, type: 3}
+  trashBin: []
+  warning: []
+  deliveryFail:
+  - {fileID: 8300000, guid: e14e9c32bf2c7e64594325eb1be31ee8, type: 3}
+  deliverySuccess:
+  - {fileID: 8300000, guid: ad2992f759e2e0a4da5478af5409bd94, type: 3}

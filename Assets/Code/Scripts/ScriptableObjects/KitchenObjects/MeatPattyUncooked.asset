@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: MeatPattyUncooked
   m_EditorClassIdentifier: 
   prefab: {fileID: 6939546724988672811, guid: 905e507229a583140b679e24509a8d17, type: 3}
-  sprite: {fileID: 21300000, guid: ef30d34b001217e499ed23d619a08ce7, type: 3}
+  sprite: {fileID: 21300000, guid: 9d42e9c059f3ef7458a2a300f6d7e1be, type: 3}
   objectName: Meat Patty Uncooked

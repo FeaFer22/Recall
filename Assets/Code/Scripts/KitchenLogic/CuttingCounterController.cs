@@ -8,6 +8,7 @@ public class CuttingCounterController : BaseCounter, IHasProgress
 {
     public event EventHandler<IHasProgress.OnProgressChangedEventArgs> OnProgressChanged;
 
+    public event EventHandler OnCut;
 
     [SerializeField] private CuttingRecipeScriptableObj[] cutRecipeSriptableObjArray;
 
@@ -61,6 +62,9 @@ public class CuttingCounterController : BaseCounter, IHasProgress
         if (HasKitchenObject() && HasRecipeWithInput(GetKitchenObject().GetKitchenObjectSO()))
         {
             cuttingProgress++;
+
+            OnCut?.Invoke(this, EventArgs.Empty);
+
             CuttingRecipeScriptableObj cuttingRecipeScriptableObj = GetCuttingRecipeScriptableObjWithInput(GetKitchenObject().GetKitchenObjectSO());
             
             OnProgressChanged?.Invoke(this, new IHasProgress.OnProgressChangedEventArgs
