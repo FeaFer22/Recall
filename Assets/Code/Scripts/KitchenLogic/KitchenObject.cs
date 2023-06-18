@@ -43,12 +43,14 @@ public class KitchenObject : NetworkBehaviour
 
         this.kitchenObjectParent = kitchenObjectParent;
 
-        if (!kitchenObjectParent.HasKitchenObject())
+        if (kitchenObjectParent.HasKitchenObject())
         {
-            kitchenObjectParent.SetKitchenObject(this);
-
-            followTransform.SetTargetTransfrom(kitchenObjectParent.GetKitchenObjectFollowTransform());
+            
         }
+
+        kitchenObjectParent.SetKitchenObject(this);
+
+        followTransform.SetTargetTransfrom(kitchenObjectParent.GetKitchenObjectFollowTransform());
     }
 
     public IKitchenObjectParent GetKitchenObjectParent()

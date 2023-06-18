@@ -36,7 +36,7 @@ public class ClearCounterController : BaseCounter, IKitchenObjectParent
                     {
                         if (plateKitchenObject.TryAddIngredient(interactionController.GetKitchenObject().GetKitchenObjectSO()))
                         {
-                            interactionController.GetKitchenObject().DestroySelf();
+                            KitchenObject.DestroyKitchenObject(interactionController.GetKitchenObject());
                         }
                     }
                 }
