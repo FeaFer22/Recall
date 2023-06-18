@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Unity.Netcode;
 
 namespace Assets.Code.Scripts.KitchenLogic
 {
@@ -13,9 +14,21 @@ namespace Assets.Code.Scripts.KitchenLogic
         {
             if (playerInteraction.HasKitchenObject())
             {
-                OnTrashed?.Invoke(this, EventArgs.Empty);
-                playerInteraction.GetKitchenObject().DestroySelf();
+                KitchenObject.DestroyKitchenObject(playerInteraction.GetKitchenObject());
+                TrashedServerRpc();
             }
         }
+
+        [ServerRpc(RequireOwnership = false)]
+        private void TrashedServerRpc()
+        {
+            TrashedClientRpc();
+        }
+        [ClientRpc]
+        private void TrashedClientRpc()
+        {
+            OnTrashed?.Invoke(this, EventArgs.Empty);
+        }
+
     }
 }
