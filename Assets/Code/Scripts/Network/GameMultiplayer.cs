@@ -58,7 +58,7 @@ public class GameMultiplayer : NetworkBehaviour
         kitchenObject.DestroySelf();
     }
 
-
+    [ClientRpc]
     private void ClearKitchenObjectOnParentClientRpc(NetworkObjectReference kitchenObjectNetworkObjectReference)
     {
         kitchenObjectNetworkObjectReference.TryGet(out NetworkObject kitchenObjectNetworkObject);

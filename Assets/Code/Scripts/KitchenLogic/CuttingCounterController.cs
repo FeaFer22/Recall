@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -22,15 +23,10 @@ public class CuttingCounterController : BaseCounter, IHasProgress
             {
                 if(HasRecipeWithInput(interactionController.GetKitchenObject().GetKitchenObjectSO()))
                 {
-                    interactionController.GetKitchenObject().SetKitchenObjectParent(this);
-                    cuttingProgress = 0;
+                    KitchenObject kitchenObject = interactionController.GetKitchenObject();
+                    kitchenObject.SetKitchenObjectParent(this);
 
-                    CuttingRecipeScriptableObj cuttingRecipeScriptableObj = GetCuttingRecipeScriptableObjWithInput(GetKitchenObject().GetKitchenObjectSO());
-
-                    OnProgressChanged?.Invoke(this, new IHasProgress.OnProgressChangedEventArgs
-                    {
-                        progressNormalized = (float)cuttingProgress / cuttingRecipeScriptableObj.cuttingProgressMax
-                    });
+                    InteractionLogicPlaceObjOnCounterServerRpc();
                 }
             }
             else
@@ -46,7 +42,7 @@ public class CuttingCounterController : BaseCounter, IHasProgress
                 {
                     if (plateKitchenObject.TryAddIngredient(GetKitchenObject().GetKitchenObjectSO()))
                     {
-                        GetKitchenObject().DestroySelf();
+                        KitchenObject.DestroyKitchenObject(GetKitchenObject());
                     }
                 }
             }
@@ -56,32 +52,60 @@ public class CuttingCounterController : BaseCounter, IHasProgress
             }
         }
     }
+    
+    [ServerRpc(RequireOwnership = false)]
+    private void InteractionLogicPlaceObjOnCounterServerRpc()
+    {
+        InteractionLogicPlaceObjOnCounterClientRpc();
+    }
+    [ClientRpc]
+    private void InteractionLogicPlaceObjOnCounterClientRpc()
+    {
+        cuttingProgress = 0;
+        OnProgressChanged?.Invoke(this, new IHasProgress.OnProgressChangedEventArgs
+        {
+            progressNormalized = 0f
+        });
+    }
 
     public override void InteractAlternate(PlayerInteractionController interactionController)
     {
         if (HasKitchenObject() && HasRecipeWithInput(GetKitchenObject().GetKitchenObjectSO()))
         {
-            cuttingProgress++;
-
-            OnCut?.Invoke(this, EventArgs.Empty);
-
-            CuttingRecipeScriptableObj cuttingRecipeScriptableObj = GetCuttingRecipeScriptableObjWithInput(GetKitchenObject().GetKitchenObjectSO());
-            
-            OnProgressChanged?.Invoke(this, new IHasProgress.OnProgressChangedEventArgs
-            {
-                progressNormalized = (float)cuttingProgress / cuttingRecipeScriptableObj.cuttingProgressMax
-            });
-
-            if (cuttingProgress >= cuttingRecipeScriptableObj.cuttingProgressMax)
-            {
-                KitchenObjectScriptableObject outputKitchenObjectSO = GetOutputForInput(GetKitchenObject().GetKitchenObjectSO());
-                GetKitchenObject().DestroySelf();
-
-                KitchenObject.SpawnKitchenObject(outputKitchenObjectSO, this);
-            }
+            CutObjectServerRpc();
         }
     }
 
+
+    [ServerRpc(RequireOwnership = false)]
+    private void CutObjectServerRpc()
+    {
+        CutObjectClientRpc();
+    }
+
+    [ClientRpc]
+    private void CutObjectClientRpc()
+    {
+        cuttingProgress++;
+
+        OnCut?.Invoke(this, EventArgs.Empty);
+
+        CuttingRecipeScriptableObj cuttingRecipeScriptableObj = GetCuttingRecipeScriptableObjWithInput(GetKitchenObject().GetKitchenObjectSO());
+
+        OnProgressChanged?.Invoke(this, new IHasProgress.OnProgressChangedEventArgs
+        {
+            progressNormalized = (float)cuttingProgress / cuttingRecipeScriptableObj.cuttingProgressMax
+        });
+
+        if (cuttingProgress >= cuttingRecipeScriptableObj.cuttingProgressMax)
+        {
+            KitchenObjectScriptableObject outputKitchenObjectSO = GetOutputForInput(GetKitchenObject().GetKitchenObjectSO());
+            
+            KitchenObject.DestroyKitchenObject(GetKitchenObject());
+
+            KitchenObject.SpawnKitchenObject(outputKitchenObjectSO, this);
+        }
+    }
 
     private bool HasRecipeWithInput(KitchenObjectScriptableObject inputKitchenObjSO)
     {
@@ -114,3 +138,4 @@ public class CuttingCounterController : BaseCounter, IHasProgress
         return null;
     }
 }
+
