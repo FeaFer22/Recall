@@ -115,7 +115,6 @@ public class StoveCounterController : BaseCounter, IHasProgress
                         KitchenObject.SpawnKitchenObject(burningRecipeScriptableObj.output, this);
 
                         state.Value = State.Burned;
-
                     }
                     break;
                 case State.Burned:
@@ -150,7 +149,7 @@ public class StoveCounterController : BaseCounter, IHasProgress
                 {
                     if (plateKitchenObject.TryAddIngredient(GetKitchenObject().GetKitchenObjectSO()))
                     {
-                        GetKitchenObject().DestroySelf();
+                        KitchenObject.DestroyKitchenObject(GetKitchenObject());
 
                         state.Value = State.Idle;
                     }
@@ -175,6 +174,7 @@ public class StoveCounterController : BaseCounter, IHasProgress
     private void InteractionLogicPlaceObjOnCounterServerRpc(int kitchenSOIndex)
     {
         fryingTimer.Value = 0f;
+        state.Value = State.Frying;
         SetFryingRecipeSOClientRpc(kitchenSOIndex);
     }
     [ClientRpc]
@@ -188,7 +188,7 @@ public class StoveCounterController : BaseCounter, IHasProgress
     private void SetBurningRecipeSOClientRpc(int kitchenSOIndex)
     {
         KitchenObjectScriptableObject kitchenObjectSO = GameMultiplayer.Instance.GetKitchenObjectSOFromIndex(kitchenSOIndex);
-        fryingRecipeScriptableObj = GetFryingRecipeScriptableObjWithInput(kitchenObjectSO);
+        burningRecipeScriptableObj = GetBurningRecipeScriptableObjWithInput(kitchenObjectSO);
     }
 
     private bool HasRecipeWithInput(KitchenObjectScriptableObject inputKitchenObjSO)
