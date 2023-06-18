@@ -1,8 +1,8 @@
+using Unity.Netcode;
 using UnityEngine;
 
-public class PlayerMovementController : MonoBehaviour
+public class PlayerMovementController : NetworkBehaviour
 {
-    private PlayerInputManager inputManager;
     [SerializeField] private PlayerCollisionController collisionController;
     public Vector3 moveDirection;
     public Vector3 lastInteractionDirection;
@@ -12,18 +12,19 @@ public class PlayerMovementController : MonoBehaviour
 
     private void Awake()
     {
-        inputManager = GetComponent<PlayerInputManager>();  
         collisionController = GetComponent<PlayerCollisionController>();
     }
     public void HandleAllMovement()
     {
         HandleMovement();
-        HandleRotation();
     }
 
     private void HandleMovement()
     {
-        moveDirection = new Vector3(inputManager.horizontalInput, 0, inputManager.verticalInput);
+        Vector2 inputVector = PlayerInputManager.Instance.GetMovementVectorNormalized();
+
+        moveDirection = new Vector3(inputVector.x, 0, inputVector.y);
+        HandleRotation(moveDirection);
 
         float moveDistance = walkingSpeed * Time.deltaTime;
 
@@ -65,7 +66,7 @@ public class PlayerMovementController : MonoBehaviour
         }
     }
 
-    private void HandleRotation()
+    private void HandleRotation(Vector3 moveDirection)
     {
         if(moveDirection != Vector3.zero)
         {

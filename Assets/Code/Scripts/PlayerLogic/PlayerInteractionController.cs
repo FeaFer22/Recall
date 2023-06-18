@@ -1,24 +1,19 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class PlayerInteractionController : MonoBehaviour, IKitchenObjectParent
+public class PlayerInteractionController : NetworkBehaviour, IKitchenObjectParent
 {
-    private PlayerMovementController movementController;
-    private PlayerCollisionController collisionController;
-    private PlayerInputManager inputManager;
-    private BaseCounter selectedCounter;
-    private KitchenObject kitchenObject;
+    public static PlayerInteractionController LocalInstance { get; private set; }
 
-    [SerializeField] private LayerMask counterLayerMask;
-
-    [SerializeField] private Transform kitchenObjectHoldPoint;
-
-  
-
-    public static PlayerInteractionController Instance { get; private set; }
+    public static event EventHandler OnAnyPlayerSpawned;
+    public static void ResetStaticData()
+    {
+        OnAnyPlayerSpawned = null;
+    }
 
     public event EventHandler<OnSelectedCounterChangedEventArgs> OnSelectedCounterChanged;
     public class OnSelectedCounterChangedEventArgs : EventArgs
@@ -27,25 +22,38 @@ public class PlayerInteractionController : MonoBehaviour, IKitchenObjectParent
     }
 
 
+    private PlayerMovementController movementController;
+    private PlayerCollisionController collisionController;
+    private BaseCounter selectedCounter;
+    private KitchenObject kitchenObject;
+
+    [SerializeField] private LayerMask counterLayerMask;
+
+    [SerializeField] private Transform kitchenObjectHoldPoint;
     private void Awake()
     {
         movementController = GetComponent<PlayerMovementController>();
         collisionController = GetComponent<PlayerCollisionController>();
-        inputManager = GetComponent<PlayerInputManager>();
-
-        if (Instance != null)
-        {
-            Debug.LogError("More than one instance");
-        }
-        Instance = this;
+        //Instance = this;
     }
+
+    public override void OnNetworkSpawn()
+    {
+        if (IsOwner)
+        {
+            LocalInstance = this;
+        }
+
+        OnAnyPlayerSpawned?.Invoke(this, EventArgs.Empty);
+    }
+
     private void Start()
     {
-        inputManager.OnInteractAction += inputManager_OnInteractionAction;
-        inputManager.OnInteractAltAction += inputManager_OnInteractionAltAction;
+        PlayerInputManager.Instance.OnInteractAction += InputManager_OnInteractionAction;
+        PlayerInputManager.Instance.OnInteractAltAction += InputManager_OnInteractionAltAction;
     }
 
-    private void inputManager_OnInteractionAction(object sender, System.EventArgs e)
+    private void InputManager_OnInteractionAction(object sender, System.EventArgs e)
     {
         if (!GameManager.Instance.IsGamePlaying())
         {
@@ -57,7 +65,7 @@ public class PlayerInteractionController : MonoBehaviour, IKitchenObjectParent
         }
     }
 
-    private void inputManager_OnInteractionAltAction(object sender, System.EventArgs e)
+    private void InputManager_OnInteractionAltAction(object sender, System.EventArgs e)
     {
         if (!GameManager.Instance.IsGamePlaying())
         {
@@ -121,5 +129,10 @@ public class PlayerInteractionController : MonoBehaviour, IKitchenObjectParent
     public bool HasKitchenObject()
     {
         return kitchenObject != null;
+    }
+
+    public NetworkObject GetNetworkObject()
+    {
+        return NetworkObject;
     }
 }

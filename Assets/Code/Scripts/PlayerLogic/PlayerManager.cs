@@ -1,9 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
+using Unity.Netcode;
 
-public class PlayerManager : MonoBehaviour
+public class PlayerManager : NetworkBehaviour
 {
     private PlayerInputManager inputManager;
     private PlayerMovementController movementController;
@@ -20,13 +18,13 @@ public class PlayerManager : MonoBehaviour
 
     private void Update()
     {
+        if (!IsOwner)
+        {
+            return;
+        }
+        movementController.HandleAllMovement();
         inputManager.HandleAllInputs();
         interactionController.HandleInteraction();
         playerCollisionController.enabled = true;
-    }
-
-    private void FixedUpdate()
-    {
-        movementController.HandleAllMovement();
     }
 }

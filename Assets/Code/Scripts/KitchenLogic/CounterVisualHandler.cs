@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,7 +10,23 @@ public class CounterVisualHandler : MonoBehaviour
     [SerializeField] private GameObject[] visualGameObjectArray;
     private void Start()
     {
-        PlayerInteractionController.Instance.OnSelectedCounterChanged += Player_OnSelectedCounterChanged;
+        if(PlayerInteractionController.LocalInstance != null)
+        {
+            PlayerInteractionController.LocalInstance.OnSelectedCounterChanged += Player_OnSelectedCounterChanged;
+        }
+        else
+        {
+            PlayerInteractionController.OnAnyPlayerSpawned += Player_OnAnyPlayerSpawned;
+        }
+    }
+
+    private void Player_OnAnyPlayerSpawned(object sender, EventArgs e)
+    {
+        if (PlayerInteractionController.LocalInstance != null)
+        {
+            PlayerInteractionController.LocalInstance.OnSelectedCounterChanged -= Player_OnSelectedCounterChanged;
+            PlayerInteractionController.LocalInstance.OnSelectedCounterChanged += Player_OnSelectedCounterChanged;
+        }
     }
 
     private void Player_OnSelectedCounterChanged(object sender, PlayerInteractionController.OnSelectedCounterChangedEventArgs e)

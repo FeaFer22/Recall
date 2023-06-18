@@ -9,6 +9,8 @@ public class SoundManager : MonoBehaviour
 
     private void Start()
     {
+        //PlayerInteractionController.LocalInstance.OnPickedSomething += Player_OnPickedSomething;
+
         DeliveryManager.Instance.OnRecipeSuccess += DeliveryManager_OnRecipeSuccess;
         DeliveryManager.Instance.OnRecipeFailed += DeliveryManager_OnRecipeFailed;
     }

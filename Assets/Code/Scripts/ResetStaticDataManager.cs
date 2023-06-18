@@ -6,6 +6,7 @@ public class ResetStaticDataManager : MonoBehaviour
 {
     private void Awake()
     {
+        PlayerInteractionController.ResetStaticData();
         //.ResetStaticData()
         /*
         public static void ResetStaticData()

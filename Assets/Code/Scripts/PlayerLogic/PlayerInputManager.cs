@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.InputSystem.Processors;
 
 public class PlayerInputManager : MonoBehaviour
 {
@@ -65,6 +66,13 @@ public class PlayerInputManager : MonoBehaviour
     public void HandleAllInputs()
     {
         HandleMovementInput();
+    }
+
+    public Vector2 GetMovementVectorNormalized()
+    {
+        Vector2 input = new(movementInput.x, movementInput.y);
+        
+        return input;
     }
 
     private void HandleMovementInput()
