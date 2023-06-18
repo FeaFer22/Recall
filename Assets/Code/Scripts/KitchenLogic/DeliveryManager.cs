@@ -50,7 +50,7 @@ public class DeliveryManager : NetworkBehaviour
     {
         RecipeScriptableObject waitingRecipeSO = recipeListSO.recipeSOList[waitingRecipeSOIndex];
         waitingRecipeSOList.Add(waitingRecipeSO);
-        OnRecipeCompleted?.Invoke(this, EventArgs.Empty);
+        OnRecipeSpawned?.Invoke(this, EventArgs.Empty);
     }
 
     public void DeliverRecipe(PlateKitchenObject plateKitchenObject)
