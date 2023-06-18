@@ -73,6 +73,7 @@ public class CuttingCounterController : BaseCounter, IHasProgress
         if (HasKitchenObject() && HasRecipeWithInput(GetKitchenObject().GetKitchenObjectSO()))
         {
             CutObjectServerRpc();
+            TestCuttingProgressDoneServerRpc();
         }
     }
 
@@ -96,11 +97,17 @@ public class CuttingCounterController : BaseCounter, IHasProgress
         {
             progressNormalized = (float)cuttingProgress / cuttingRecipeScriptableObj.cuttingProgressMax
         });
+    }
 
-        if (cuttingProgress >= cuttingRecipeScriptableObj.cuttingProgressMax)
+    [ServerRpc(RequireOwnership = false)]
+    private void TestCuttingProgressDoneServerRpc()
+    {
+        CuttingRecipeScriptableObj cuttingRecipeSO = GetCuttingRecipeScriptableObjWithInput(GetKitchenObject().GetKitchenObjectSO());
+
+        if (cuttingProgress >= cuttingRecipeSO.cuttingProgressMax)
         {
             KitchenObjectScriptableObject outputKitchenObjectSO = GetOutputForInput(GetKitchenObject().GetKitchenObjectSO());
-            
+
             KitchenObject.DestroyKitchenObject(GetKitchenObject());
 
             KitchenObject.SpawnKitchenObject(outputKitchenObjectSO, this);
