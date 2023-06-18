@@ -151,7 +151,7 @@ public class StoveCounterController : BaseCounter, IHasProgress
                     {
                         KitchenObject.DestroyKitchenObject(GetKitchenObject());
 
-                        state.Value = State.Idle;
+                        SetStateIdleServerRpc();
                     }
                 }
             }
