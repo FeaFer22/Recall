@@ -1,4 +1,5 @@
 using System;
+using Unity.Netcode;
 using UnityEngine;
 
 public class ContainerCounterController : BaseCounter
@@ -11,7 +12,19 @@ public class ContainerCounterController : BaseCounter
         if (!interactionController.HasKitchenObject())
         {
             KitchenObject.SpawnKitchenObject(kitchenObjectSO, interactionController);
-            OnPlayerGetObject?.Invoke(this, EventArgs.Empty);
+            InteractLogicServerRpc();
         }
     }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void InteractLogicServerRpc()
+    {
+        InteractLogicClientRpc();
+    }
+    [ClientRpc]
+    private void InteractLogicClientRpc()
+    {
+        OnPlayerGetObject?.Invoke(this, EventArgs.Empty);
+    }
+
 }

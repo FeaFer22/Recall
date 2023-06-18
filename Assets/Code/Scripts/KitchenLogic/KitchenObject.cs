@@ -8,6 +8,12 @@ public class KitchenObject : NetworkBehaviour
     [SerializeField] private KitchenObjectScriptableObject scriptableObject;
 
     private IKitchenObjectParent kitchenObjectParent;
+    private FollowTransform followTransform;
+
+    protected virtual void Awake()
+    {
+        followTransform = GetComponent<FollowTransform>();
+    }
 
     public KitchenObjectScriptableObject GetKitchenObjectSO()
     {
@@ -16,7 +22,21 @@ public class KitchenObject : NetworkBehaviour
 
     public void SetKitchenObjectParent(IKitchenObjectParent kitchenObjectParent)
     {
-        if(this.kitchenObjectParent != null)
+        SetKitchenObjectParentServerRpc(kitchenObjectParent.GetNetworkObject());
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void SetKitchenObjectParentServerRpc(NetworkObjectReference kitchenObjectParentNetworkObjectReference) 
+    {
+        SetKitchenObjectParentClientRpc(kitchenObjectParentNetworkObjectReference);
+    }
+    [ClientRpc]
+    private void SetKitchenObjectParentClientRpc(NetworkObjectReference kitchenObjectParentNetworkObjectReference)
+    {
+        kitchenObjectParentNetworkObjectReference.TryGet(out NetworkObject kitchenObjectParentNetworkObject);
+        IKitchenObjectParent kitchenObjectParent = kitchenObjectParentNetworkObject.GetComponent<IKitchenObjectParent>();
+
+        if (this.kitchenObjectParent != null)
         {
             this.kitchenObjectParent.ClearKitchenObject();
         }
@@ -26,10 +46,9 @@ public class KitchenObject : NetworkBehaviour
         if (!kitchenObjectParent.HasKitchenObject())
         {
             kitchenObjectParent.SetKitchenObject(this);
+
+            followTransform.SetTargetTransfrom(kitchenObjectParent.GetKitchenObjectFollowTransform());
         }
-        //transform.parent = kitchenObjectParent.GetKitchenObjectFollowTransform();
-        //transform.localPosition = Vector3.zero;
-        //transform.localRotation = Quaternion.Euler(transform.localPosition);
     }
 
     public IKitchenObjectParent GetKitchenObjectParent()
