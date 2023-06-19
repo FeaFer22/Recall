@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -9,7 +10,8 @@ public static class Loader
     {
         MainMenuScene,
         Testing, //NEED TO SWAP TO GameScene¹N
-        LoadingScene
+        LoadingScene,
+        LobbyScene
     }
     private static Scene targetScene;
 
@@ -20,6 +22,11 @@ public static class Loader
         SceneManager.LoadScene(Scene.LoadingScene.ToString());
 
         SceneManager.LoadScene(targetSceneName.ToString());
+    }
+
+    public static void LoadNetwork(Scene targetScene)
+    {
+        NetworkManager.Singleton.SceneManager.LoadScene(targetScene.ToString(), LoadSceneMode.Single);
     }
 
     public static void LoaderCallback()

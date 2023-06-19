@@ -16,13 +16,16 @@ public class PlayerMovementController : NetworkBehaviour
     }
     public void HandleAllMovement()
     {
+        if (!IsOwner)
+        {
+            return;
+        }
         HandleMovement();
     }
 
     private void HandleMovement()
     {
         Vector2 inputVector = PlayerInputManager.Instance.GetMovementVectorNormalized();
-
         moveDirection = new Vector3(inputVector.x, 0, inputVector.y);
         HandleRotation(moveDirection);
 

@@ -11,6 +11,7 @@ public class GameMultiplayer : NetworkBehaviour
     private void Awake()
     {
         Instance = this;
+        DontDestroyOnLoad(gameObject);
     }
 
     public void SpawnKitchenObject(KitchenObjectScriptableObject scriptableObject, IKitchenObjectParent kitchenObjectParent)

@@ -26,5 +26,6 @@ public class PlayerManager : NetworkBehaviour
         inputManager.HandleAllInputs();
         interactionController.HandleInteraction();
         playerCollisionController.enabled = true;
+
     }
 }

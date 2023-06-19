@@ -16,4 +16,5 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 2929164929aebe64eaaba94da56bb639, type: 2}
   - {fileID: 11400000, guid: b772bd5c1abce274f8b1c78a3a584062, type: 2}
   - {fileID: 11400000, guid: 6b0fbbc9033e6a2468faa9f55ef1f90e, type: 2}
-  recipeName: Meat with Cheese and Tomato
+  recipeName: "\u041C\u044F\u0441\u043E \u0441 \u0442\u043E\u043C\u0430\u0442\u043E\u043C
+    \u0432 \u0441\u044B\u0440\u0435"

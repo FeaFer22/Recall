@@ -16,20 +16,17 @@ public class PlayerInputManager : MonoBehaviour
     public event EventHandler OnInteractAltAction;
     public event EventHandler OnPauseAction;
 
-    private void OnEnable()
+    private void Awake()
     {
         Instance = this;
-        if (playerInput == null)
-        {
-            playerInput = new PlayerInput();
 
-            playerInput.PlayerMovement.Movement.performed += i => movementInput = i.ReadValue<Vector2>();
+        playerInput = new PlayerInput();
 
-            playerInput.PlayerInteraction.Interact.performed += Interact_performed;
-            playerInput.PlayerInteraction.InteractAlt.performed += InteractAlt_performed;
-            playerInput.PlayerUI.Pause.performed += Pause_performed;
-        }
+        playerInput.PlayerMovement.Movement.performed += i => movementInput = i.ReadValue<Vector2>();
 
+        playerInput.PlayerInteraction.Interact.performed += Interact_performed;
+        playerInput.PlayerInteraction.InteractAlt.performed += InteractAlt_performed;
+        playerInput.PlayerUI.Pause.performed += Pause_performed;
         playerInput.Enable();
     }
 
